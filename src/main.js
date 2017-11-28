@@ -1,4 +1,5 @@
 import './css/common.css';
+import './css/style.less';
 
 function getData() {
     let promise = new Promise((resolve, reject) => {

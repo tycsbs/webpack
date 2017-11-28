@@ -10,17 +10,21 @@ module.exports = {
     },
     module: {
         rules: [{
-            test: /\.js$/,
-            use: 'babel-loader',
-            exclude: path.resolve(__dirname + 'node_modules'),
-            include: path.resolve(__dirname + 'src')
-        }, {
             test: /\.css$/,
-            use: extractTextPlugin.extract({
-                fallback: 'style-loader',
-                use: 'css-loader!postcss-loader'
-            }),
+            use: [
+                { loader: "style-loader" },
+                { loader: "css-loader", options: { importLoaders: 1 } },
+                { loader: "postcss-loader" }
+            ],
             exclude: path.resolve(__dirname + 'node_modules')
+        }, {
+            test: /\.less$/,
+            use: [
+                { loader: "style-loader" },
+                { loader: "css-loader", options: { importLoaders: 2 } },
+                { loader: "postcss-loader" },
+                { loader: "less-loader" }
+            ]
         }]
     },
     plugins: [
@@ -35,6 +39,6 @@ module.exports = {
                 root: __dirname
             }
         ),
-        new extractTextPlugin('css/[name].css')
+        //new extractTextPlugin('css/[name].css')
     ]
 }
