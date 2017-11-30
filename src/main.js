@@ -4,19 +4,19 @@ import './css/style.less';
 function getData() {
     let promise = new Promise((resolve, reject) => {
         let key = ~~(Math.random() * 10);
-        console.log(key)
+        let temp = ['es6', 'babel']
         if (key >= 5) {
             let obj = {
                 msg: "ok",
-                data: key
+                data: [key, ...temp]
             };
             resolve.call(this, obj);
         } else {
             let obj = {
                 msg: "error",
-                data: key
+                data: [key, ...temp]
             };
-            reject.call(this, obj)
+            reject.call(this, obj);
         }
     })
     return promise

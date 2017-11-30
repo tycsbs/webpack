@@ -1,7 +1,10 @@
 let path = require('path');
 let htmlWebpackPlugin = require('html-webpack-plugin');
 let cleanWebpackPlugin = require('clean-webpack-plugin');
-let extractTextPlugin = require('extract-text-webpack-plugin')
+let extractTextPlugin = require('extract-text-webpack-plugin');
+let extractCSS = new extractTextPlugin('css/[name]-one.css');
+let extractLESS = new extractTextPlugin('css/[name]-two.css');
+
 module.exports = {
     entry: path.resolve(__dirname, './src/main.js'),
     output: {
@@ -11,20 +14,25 @@ module.exports = {
     module: {
         rules: [{
             test: /\.css$/,
-            use: [
-                { loader: "style-loader" },
+            exclude: /node_modules/,
+            use: extractCSS.extract([
+                // { loader: "style-loader" },
                 { loader: "css-loader", options: { importLoaders: 1 } },
                 { loader: "postcss-loader" }
-            ],
-            exclude: path.resolve(__dirname + 'node_modules')
+            ])
         }, {
             test: /\.less$/,
-            use: [
-                { loader: "style-loader" },
-                { loader: "css-loader", options: { importLoaders: 2 } },
+            exclude: /node_modules/,
+            use: extractLESS.extract([
+                // { loader: "style-loader" },
+                { loader: "css-loader", options: { importLoaders: 1 } },
                 { loader: "postcss-loader" },
                 { loader: "less-loader" }
-            ]
+            ])
+        }, {
+            test: /\.js$/,
+            use: [{ loader: "babel-loader" }],
+            exclude: /node_modules/
         }]
     },
     plugins: [
@@ -39,6 +47,8 @@ module.exports = {
                 root: __dirname
             }
         ),
-        //new extractTextPlugin('css/[name].css')
+        extractCSS,
+        extractLESS
+        //new extractTextPlugin('css/build.css')
     ]
 }
