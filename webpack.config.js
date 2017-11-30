@@ -4,7 +4,7 @@ let cleanWebpackPlugin = require('clean-webpack-plugin');
 let extractTextPlugin = require('extract-text-webpack-plugin');
 let extractCSS = new extractTextPlugin('css/[name]-one.css');
 let extractLESS = new extractTextPlugin('css/[name]-two.css');
-
+let extractSCSS = new extractTextPlugin('css/[name]-three.css');
 module.exports = {
     entry: path.resolve(__dirname, './src/main.js'),
     output: {
@@ -30,6 +30,15 @@ module.exports = {
                 { loader: "less-loader" }
             ])
         }, {
+            test: /\.scss$/,
+            exclude: /node_modules/,
+            use: extractSCSS.extract([
+                // { loader: "style-loader" },
+                { loader: "css-loader", options: { importLoaders: 1 } },
+                { loader: "postcss-loader" },
+                { loader: "sass-loader" }
+            ])
+        }, {
             test: /\.js$/,
             use: [{ loader: "babel-loader" }],
             exclude: /node_modules/
@@ -48,7 +57,8 @@ module.exports = {
             }
         ),
         extractCSS,
-        extractLESS
+        extractLESS,
+        extractSCSS
         //new extractTextPlugin('css/build.css')
     ]
 }
