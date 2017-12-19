@@ -19,12 +19,12 @@ function getData() {
             reject.call(this, obj);
         }
     })
-    return promise
+    return promise;
 }
 let container = document.querySelector('#app');
 
 getData().then((data) => {
-    container.innerHTML = JSON.stringify(data)
+    container.innerHTML = JSON.stringify(data);
 }, (err) => {
-    container.innerHTML = JSON.stringify(err)
+    container.innerHTML = JSON.stringify(err);
 })

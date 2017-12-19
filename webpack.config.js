@@ -5,11 +5,20 @@ let extractTextPlugin = require('extract-text-webpack-plugin');
 let extractCSS = new extractTextPlugin('css/[name]-one.css');
 let extractLESS = new extractTextPlugin('css/[name]-two.css');
 
+let webpack = require('webpack');
+
+
 module.exports = {
+    context: __dirname,
     entry: path.resolve(__dirname, './src/main.js'),
     output: {
         path: path.resolve(__dirname, './dist'),
         filename: 'js/[name]-[chunkhash].js'
+    },
+    devServer: {
+        // hot: true,
+        port: 3000,
+        inline: true
     },
     module: {
         rules: [{
@@ -33,9 +42,38 @@ module.exports = {
             test: /\.js$/,
             use: [{ loader: "babel-loader" }],
             exclude: /node_modules/
+        }, {
+            test: /\.(png|jpg|gif|svg)$/i,
+            exclude: /node_modules/,
+            use: [{
+                loader: 'url-loader',
+                options: {
+                    limit: 10240,
+                    outputPath: 'assets/',
+                    // useRelativePath: true
+                }
+            }, {
+                loader: 'image-webpack-loader',
+                options: {
+                    mozjpeg: {
+                        progressive: true,
+                        quality: 65
+                    },
+                }
+            }]
         }]
     },
     plugins: [
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendor',
+            filename: 'vendor-[hash].min.js',
+        }),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false,
+                drop_console: false,
+            }
+        }),
         new htmlWebpackPlugin({
             template: 'index.html',
             filename: 'index.html'
@@ -49,6 +87,5 @@ module.exports = {
         ),
         extractCSS,
         extractLESS
-        //new extractTextPlugin('css/build.css')
     ]
 }
