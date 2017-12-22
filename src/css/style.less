@@ -1,8 +1,10 @@
+@charset 'utf-8';
 @base: #f938ab;
-
+/*test*/ 
 .box-shadow(@style, @c) when (iscolor(@c)) {
   box-shadow:         @style @c;
 }
+/*注释*/ 
 .box-shadow(@style, @alpha: 50%) when (isnumber(@alpha)) {
   .box-shadow(@style, rgba(0, 0, 0, @alpha));
 }
